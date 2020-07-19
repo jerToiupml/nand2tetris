@@ -11,4 +11,51 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-// Put your code here.
+
+(LOOP)
+	@KBD
+	D = M
+
+	@KEY_PRESSED
+	D; JNE // test qu'aucune touche n'est appuyé (donc RAM[KBD ==0)
+	
+	@color
+	M = 0
+	
+	@START
+	0; JMP
+	
+(KEY_PRESSED)
+	@color
+	M = -1
+	
+(START)
+	@SCREEN
+	D = A
+	
+	@pointer
+	M = D // initialise pointer
+	
+(DRAW_LOOP)
+	@color
+	D = M
+
+	@pointer
+	A = M //on se met a l'adresse du pointeur
+	M = D // et on met la valeur de couleur 
+	
+	@pointer
+	M = M + 1 // on incrémente le pointeur
+
+	// draw_loop testing
+	@24576
+	D = A
+	
+	@pointer
+	D = D - M
+
+	@DRAW_LOOP
+	D; JNE // on continue à dessiner si count != 24576
+	
+	@LOOP
+	0; JMP
